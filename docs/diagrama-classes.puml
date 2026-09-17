@@ -82,7 +82,7 @@ class Desconto {
 
 class Holerite {
   - id: int
-  - competencia: Competencia
+  - folhaPagamento: FolhaPagamento
   - valorBruto: double
   - valorLiquido: double
   --
@@ -108,17 +108,16 @@ Lancamento <|-- Aditivo
 Lancamento <|-- Desconto
 
 ' ---------- Associações (com multiplicidade e navegação) ----------
-FolhaPagamento "1" *--> "1..*" Holerite : gera >
+Competencia "1" *--> "0..1" FolhaPagamento : gera >
+Competencia "1" *--> "0..*" Lancamento : agrupa >
+
+FolhaPagamento "1" *-- "1..*" Holerite : gera >
 
 Holerite "0..*" --> "1" Funcionario : refere-se a >
 
 Lancamento "0..*" --> "1" Funcionario : pertence a >
 
 Holerite "1" o--> "0..*" Lancamento : aplica >
-
-FolhaPagamento "1" *--> "1" Competencia : refere-se a >
-Holerite "1" *--> "1" Competencia : refere-se a >
-Lancamento "1" *--> "1" Competencia : refere-se a >
 
 note top of Funcionario
   Classe abstrata. Cada subtipo
@@ -134,9 +133,20 @@ note top of Lancamento
 end note
 
 note right of FolhaPagamento
-  Composição: os Holerites não
-  existem sem a FolhaPagamento
-  que os originou.
+  Composição bidirecional: os Holerites
+  não existem sem a FolhaPagamento que
+  os originou, e cada Holerite guarda
+  a referência de volta (permite navegar
+  até a Competencia).
+end note
+
+note top of Competencia
+  Raiz de composição: ao apagar uma
+  Competencia, apaga-se em cascata a
+  FolhaPagamento (e seus Holerites) e
+  todos os Lancamentos do período.
+  Regra de serviço: não permitir excluir
+  uma Competencia com folha já gerada.
 end note
 
 note bottom of Lancamento
@@ -147,10 +157,10 @@ note bottom of Lancamento
 end note
 
 note bottom of Competencia
-  Objeto de valor (mês/ano) que
-  identifica o período. Cada
-  FolhaPagamento, Holerite e
-  Lancamento possui a sua.
+  Identifica o período (mês/ano).
+  Holerite não referencia Competencia
+  diretamente: obtém o período
+  navegando por FolhaPagamento.
 end note
 
 legend bottom left
