@@ -28,6 +28,10 @@ A remuneração de um bibliotecário é determinada por um valor-base estabeleci
 
 Toda folha de pagamento, todo holerite e todo aditivo/desconto pertencem a uma **competência**, identificada pelo mês e pelo ano de referência (ex.: 09/2026). É a competência que define a qual mês um lançamento (aditivo ou desconto) se refere, e é para uma competência específica que uma folha de pagamento é gerada.
 
+### Regras de validação
+
+* Todo profissional cadastrado deve ter, no mínimo, **18 anos de idade**.
+
 ----------
 CLASSES: COORDENADOR, PROFESSOR, BIBLIOTECARIO, FOLHAPAGAMENTO, HOLERITE, ADITIVO, DESCONTO, COMPETENCIA;
 
@@ -35,7 +39,7 @@ CLASSES: COORDENADOR, PROFESSOR, BIBLIOTECARIO, FOLHAPAGAMENTO, HOLERITE, ADITIV
 
 ## Descrição do fluxo de funcionamento do sistema
 
-Antes de dar início a geração da folha de pagamento, o sistema deve permitir que o usuário cadastre os profissionais da instituição, incluindo suas informações pessoais e dados específicos relacionados à remuneração.
+Antes de dar início a geração da folha de pagamento, o sistema deve permitir que o usuário cadastre os profissionais da instituição, incluindo suas informações pessoais e dados específicos relacionados à remuneração, respeitando a idade mínima de 18 anos exigida para o cadastro.
 
 A seguir, o usuário poderá cadastrar os aditivos e descontos que serão aplicados aos profissionais durante o mês, informando a competência (mês/ano) à qual cada lançamento se refere. Esses valores podem ser positivos (acréscimos) ou negativos (descontos) e devem ser associados a cada profissional.
 
