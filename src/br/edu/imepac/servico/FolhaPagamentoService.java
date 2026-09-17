@@ -1,6 +1,5 @@
 package br.edu.imepac.servico;
 
-import br.edu.imepac.dao.CompetenciaDAO;
 import br.edu.imepac.dao.FolhaPagamentoDAO;
 import br.edu.imepac.dao.FuncionarioDAO;
 import br.edu.imepac.dao.HoleriteDAO;
@@ -25,25 +24,25 @@ import java.util.Optional;
 public class FolhaPagamentoService {
 
     private final FolhaPagamentoDAO folhaPagamentoDAO;
-    private final CompetenciaDAO competenciaDAO;
+    private final CompetenciaService competenciaService;
     private final FuncionarioDAO funcionarioDAO;
     private final LancamentoDAO lancamentoDAO;
     private final HoleriteDAO holeriteDAO;
 
     public FolhaPagamentoService(FolhaPagamentoDAO folhaPagamentoDAO,
-                                  CompetenciaDAO competenciaDAO,
+                                  CompetenciaService competenciaService,
                                   FuncionarioDAO funcionarioDAO,
                                   LancamentoDAO lancamentoDAO,
                                   HoleriteDAO holeriteDAO) {
         this.folhaPagamentoDAO = folhaPagamentoDAO;
-        this.competenciaDAO = competenciaDAO;
+        this.competenciaService = competenciaService;
         this.funcionarioDAO = funcionarioDAO;
         this.lancamentoDAO = lancamentoDAO;
         this.holeriteDAO = holeriteDAO;
     }
 
     public FolhaPagamento gerar(int mes, int ano) {
-        Competencia competencia = competenciaDAO.buscarPorMesEAno(mes, ano)
+        Competencia competencia = competenciaService.buscarPorMesEAno(mes, ano)
                 .orElseThrow(() -> new IllegalStateException(
                         "Não há competência cadastrada para " + mes + "/" + ano
                                 + " (cadastre ao menos um aditivo/desconto antes)."));
@@ -89,7 +88,7 @@ public class FolhaPagamentoService {
     }
 
     public Optional<FolhaPagamento> consultarPorCompetencia(int mes, int ano) {
-        return competenciaDAO.buscarPorMesEAno(mes, ano)
+        return competenciaService.buscarPorMesEAno(mes, ano)
                 .flatMap(folhaPagamentoDAO::buscarPorCompetencia);
     }
 }

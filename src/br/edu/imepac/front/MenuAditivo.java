@@ -1,13 +1,17 @@
 package br.edu.imepac.front;
 
+import br.edu.imepac.entidades.Aditivo;
+
 import java.util.Scanner;
 
 /**
  * Tela "Gerenciar Aditivos" (UC2 do diagrama de caso de uso).
  *
- * A classe Aditivo ainda não existe no código (só no diagrama de
- * classes), então os dados são coletados normalmente e a persistência é
- * sinalizada como pendente da camada de serviço/DAO.
+ * O Aditivo em si já é construído e validado de verdade. O que falta é
+ * a persistência: {@code LancamentoService.cadastrar(...)} depende de
+ * resolver o Funcionario informado (via FuncionarioDAO) e a Competencia
+ * do mês/ano (via CompetenciaService, que cria uma nova se for a
+ * primeira vez naquele período) — ambos pendentes de um DAO concreto.
  */
 public class MenuAditivo {
 
@@ -52,15 +56,23 @@ public class MenuAditivo {
         int mes = LeitorConsole.lerInteiro(scanner, "Mês da competência (1-12)");
         int ano = LeitorConsole.lerInteiro(scanner, "Ano da competência");
 
-        System.out.printf("%nDados coletados: funcionário #%d, \"%s\", R$ %.2f, competência %02d/%d%n",
-                idFuncionario, descricao, valor, mes, ano);
+        Aditivo aditivo = new Aditivo();
+        aditivo.setDescricao(descricao);
+        aditivo.setValor(valor);
+
+        System.out.printf("%nDados válidos: funcionário #%d, \"%s\", R$ %.2f, competência %02d/%d%n",
+                idFuncionario, aditivo.getDescricao(), aditivo.getValor(), mes, ano);
+        System.out.printf("Exemplo de aplicação sobre um bruto de R$ 1.000,00: R$ %.2f%n",
+                aditivo.aplicar(1000));
 
         throw new FuncionalidadeNaoImplementadaException(
-                "Cadastrar Aditivo (persistência via LancamentoService/DAO)");
+                "Cadastrar Aditivo (persistência via LancamentoService — precisa localizar o "
+                        + "Funcionario #" + idFuncionario + " e resolver/criar a Competencia "
+                        + String.format("%02d/%d", mes, ano) + ", ambos pendentes de DAO)");
     }
 
     private void listarAditivos() {
         throw new FuncionalidadeNaoImplementadaException(
-                "Listar Aditivos (consulta via LancamentoService/DAO)");
+                "Listar Aditivos (consulta via LancamentoService/LancamentoDAO)");
     }
 }
