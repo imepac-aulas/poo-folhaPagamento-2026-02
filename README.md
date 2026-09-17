@@ -1,6 +1,6 @@
 Uma instituição de ensino possui diferentes profissionais envolvidos em suas atividades acadêmicas e administrativas. Entre esses profissionais estão "professores", "coordenadores" e "bibliotecários."
 
-Atualmente, a instituição precisa controlar mensalmente as informações relacionadas à remuneração desses profissionais. Cada tipo de funcionário possui uma forma específica de cálculo de sua remuneração, e determinados valores podem ser "acrescentados" ou "descontados" ao longo de cada mês.
+Atualmente, a instituição precisa controlar mensalmente as informações relacionadas à remuneração desses profissionais. Cada tipo de funcionário possui uma forma específica de cálculo de sua remuneração, e determinados valores podem ser "acrescentados" ou "descontados" ao longo de cada mês. Todo esse controle é organizado por **competência**, ou seja, o mês e o ano de referência ao qual os lançamentos e a folha de pagamento pertencem.
 
 A instituição deseja organizar esse processo por meio de um sistema de folha de pagamento que permita centralizar as informações, realizar os cálculos necessários e disponibilizar os resultados de forma organizada.
 
@@ -24,9 +24,12 @@ A remuneração de um coordenador considera:
 
 A remuneração de um bibliotecário é determinada por um valor-base estabelecido pela instituição. 
 
+### Competência
+
+Toda folha de pagamento, todo holerite e todo aditivo/desconto pertencem a uma **competência**, identificada pelo mês e pelo ano de referência (ex.: 09/2026). É a competência que define a qual mês um lançamento (aditivo ou desconto) se refere, e é para uma competência específica que uma folha de pagamento é gerada.
 
 ----------
-CLASSES: COORDENADOR, PROFESSOR, BIBLIOTECARIO, FOLHAPAGAMENTO, HOLERITE, ADITIVO, DESCONTO;
+CLASSES: COORDENADOR, PROFESSOR, BIBLIOTECARIO, FOLHAPAGAMENTO, HOLERITE, ADITIVO, DESCONTO, COMPETENCIA;
 
 ----------
 
@@ -34,9 +37,9 @@ CLASSES: COORDENADOR, PROFESSOR, BIBLIOTECARIO, FOLHAPAGAMENTO, HOLERITE, ADITIV
 
 Antes de dar início a geração da folha de pagamento, o sistema deve permitir que o usuário cadastre os profissionais da instituição, incluindo suas informações pessoais e dados específicos relacionados à remuneração.
 
-A seguir, o usuário poderá cadastrar os aditivos e descontos que serão aplicados aos profissionais durante o mês. Esses valores podem ser positivos (acréscimos) ou negativos (descontos) e devem ser associados a cada profissional.
+A seguir, o usuário poderá cadastrar os aditivos e descontos que serão aplicados aos profissionais durante o mês, informando a competência (mês/ano) à qual cada lançamento se refere. Esses valores podem ser positivos (acréscimos) ou negativos (descontos) e devem ser associados a cada profissional.
 
-Uma vez concluído o cadastro dos profissionais, aditivos e descontos, o sistema deve dar inicio ao processo de gerar a folha de pagamento e, durante a criação, deve-se criar o holerite de cada funcionario, com seus descontos e aditivos, valores bruto e liquido.
+Uma vez concluído o cadastro dos profissionais, aditivos e descontos, o sistema deve dar início ao processo de gerar a folha de pagamento para uma competência específica e, durante a criação, deve-se criar o holerite de cada funcionário, considerando apenas os aditivos e descontos lançados para aquela competência, com seus descontos e aditivos, valores bruto e líquido.
 
 ## Arquitetura do sistema 
 
