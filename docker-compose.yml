@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: folha-pagamento-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: folha_pagamento
+    ports:
+      - "3306:3306"
+    volumes:
+      # Todo arquivo .sql aqui é executado automaticamente pelo MySQL
+      # na primeira inicialização (quando o volume de dados está
+      # vazio) — é assim que as tabelas já sobem criadas junto com o
+      # banco, sem precisar de nenhum passo manual extra.
+      - ./sql:/docker-entrypoint-initdb.d
+      - folha-pagamento-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  folha-pagamento-mysql-data:

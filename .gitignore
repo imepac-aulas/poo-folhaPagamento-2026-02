@@ -28,3 +28,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Driver JDBC do MySQL (baixado manualmente, ver docs/mysql-setup.md) ###
+lib/
