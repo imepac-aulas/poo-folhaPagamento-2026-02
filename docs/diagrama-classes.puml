@@ -1,0 +1,161 @@
+@startuml diagrama-classes
+' Sistema de Folha de Pagamento - IMEPAC
+' Diagrama de Classes (UML) - Modelo de Domínio
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+hide empty members
+
+class Competencia {
+  - id: int
+  - mes: int
+  - ano: int
+  --
+  + get()
+  + set()
+}
+
+abstract class Funcionario {
+  - id: int
+  - nome: String
+  - email: String
+  - idade: int
+  --
+  + get()
+  + set()
+  + {abstract} calcularRemuneracao(): double
+}
+
+class Professor {
+  - quantidadeAulas: int
+  - valorAula: double
+  --
+  + get()
+  + set()
+  + calcularRemuneracao(): double
+}
+
+class Coordenador {
+  - valorBase: double
+  - percentual: double
+  - quantidadeAlunos: int
+  --
+  + get()
+  + set()
+  + calcularRemuneracao(): double
+}
+
+class Bibliotecario {
+  - valorBase: double
+  --
+  + get()
+  + set()
+  + calcularRemuneracao(): double
+}
+
+abstract class Lancamento {
+  - id: int
+  - descricao: String
+  - valor: double
+  - competencia: Competencia
+  - funcionario: Funcionario
+  --
+  + get()
+  + set()
+  + {abstract} aplicar(valor: double): double
+}
+
+class Aditivo {
+  --
+  + get()
+  + set()
+  + aplicar(valor: double): double
+}
+
+class Desconto {
+  --
+  + get()
+  + set()
+  + aplicar(valor: double): double
+}
+
+class Holerite {
+  - id: int
+  - competencia: Competencia
+  - valorBruto: double
+  - valorLiquido: double
+  --
+  + get()
+  + set()
+}
+
+class FolhaPagamento {
+  - id: int
+  - competencia: Competencia
+  - dataGeracao: Date
+  --
+  + get()
+  + set()
+}
+
+' ---------- Generalização ----------
+Funcionario <|-- Professor
+Funcionario <|-- Coordenador
+Funcionario <|-- Bibliotecario
+
+Lancamento <|-- Aditivo
+Lancamento <|-- Desconto
+
+' ---------- Associações (com multiplicidade e navegação) ----------
+FolhaPagamento "1" *--> "1..*" Holerite : gera >
+
+Holerite "0..*" --> "1" Funcionario : refere-se a >
+
+Lancamento "0..*" --> "1" Funcionario : pertence a >
+
+Holerite "1" o--> "0..*" Lancamento : aplica >
+
+FolhaPagamento "1" *--> "1" Competencia : refere-se a >
+Holerite "1" *--> "1" Competencia : refere-se a >
+Lancamento "1" *--> "1" Competencia : refere-se a >
+
+note top of Funcionario
+  Classe abstrata. Cada subtipo
+  implementa sua própria regra
+  de cálculo (polimorfismo).
+end note
+
+note top of Lancamento
+  Classe abstrata. Aditivo soma e
+  Desconto subtrai o próprio valor
+  (polimorfismo em aplicar()), usado
+  pelo Holerite para apurar o líquido.
+end note
+
+note right of FolhaPagamento
+  Composição: os Holerites não
+  existem sem a FolhaPagamento
+  que os originou.
+end note
+
+note bottom of Lancamento
+  Aditivo e Desconto apontam para o
+  Funcionario ao qual pertencem
+  (evita associação bidirecional
+  e reflete a FK no banco de dados).
+end note
+
+note bottom of Competencia
+  Objeto de valor (mês/ano) que
+  identifica o período. Cada
+  FolhaPagamento, Holerite e
+  Lancamento possui a sua.
+end note
+
+legend bottom left
+  Os métodos **get()** e **set()** representam, de forma genérica,
+  os getters e setters de cada atributo da classe.
+endlegend
+
+@enduml
