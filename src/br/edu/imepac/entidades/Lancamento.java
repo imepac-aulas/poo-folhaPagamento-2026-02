@@ -11,6 +11,7 @@ public abstract class Lancamento {
     private double valor;
     private Competencia competencia;
     private Funcionario funcionario;
+    private Holerite holerite;
 
     public int getId() {
         return id;
@@ -50,6 +51,20 @@ public abstract class Lancamento {
 
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
+    }
+
+    public Holerite getHolerite() {
+        return holerite;
+    }
+
+    /**
+     * Setter "simples", usado internamente por Holerite.adicionarLancamento
+     * para manter a agregação sincronizada. Começa nulo — só é
+     * preenchido quando a folha da competência é gerada e este
+     * lançamento é aplicado a um Holerite específico.
+     */
+    public void setHolerite(Holerite holerite) {
+        this.holerite = holerite;
     }
 
     /**
