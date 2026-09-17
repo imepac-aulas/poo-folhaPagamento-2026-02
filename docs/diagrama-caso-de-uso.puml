@@ -1,0 +1,75 @@
+@startuml diagrama-caso-de-uso
+' Sistema de Folha de Pagamento - IMEPAC
+' Diagrama de Casos de Uso (UML)
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Responsável pela\nFolha de Pagamento" as Operador
+
+rectangle "Sistema de Folha de Pagamento" {
+
+  ' ---------- Cadastro de profissionais ----------
+  usecase "Gerenciar Funcionários" as UC1
+  usecase "Cadastrar Professor" as UC1A
+  usecase "Cadastrar Coordenador" as UC1B
+  usecase "Cadastrar Bibliotecário" as UC1C
+  usecase "Validar Dados do Funcionário" as UC1V
+
+  ' ---------- Aditivos e descontos ----------
+  usecase "Gerenciar Aditivos" as UC2
+  usecase "Gerenciar Descontos" as UC3
+  usecase "Associar Aditivo/Desconto\nao Funcionário" as UC4
+
+  ' ---------- Folha de pagamento ----------
+  usecase "Gerar Folha de Pagamento" as UC5
+  usecase "Calcular Remuneração Bruta" as UC6
+  usecase "Aplicar Aditivos e Descontos" as UC7
+  usecase "Gerar Holerite do Funcionário" as UC8
+
+  ' ---------- Consultas ----------
+  usecase "Consultar Holerite" as UC9
+  usecase "Consultar Folha de Pagamento" as UC10
+}
+
+' ---------- Associações do ator ----------
+Operador --> UC1
+Operador --> UC2
+Operador --> UC3
+Operador --> UC4
+Operador --> UC5
+Operador --> UC9
+Operador --> UC10
+
+' ---------- Generalizações (tipos de profissional) ----------
+UC1A --|> UC1
+UC1B --|> UC1
+UC1C --|> UC1
+
+' ---------- Relações include / extend ----------
+UC1  ..> UC1V : <<include>>
+UC2  ..> UC4  : <<include>>
+UC3  ..> UC4  : <<include>>
+
+UC5  ..> UC6  : <<include>>
+UC5  ..> UC8  : <<include>>
+UC8  ..> UC7  : <<include>>
+
+UC9  ..> UC5  : <<extend>>
+
+note right of UC6
+  Regra de cálculo por tipo:
+  • Professor: nº de aulas x valor da aula
+  • Coordenador: valor-base + (percentual x nº de alunos)
+  • Bibliotecário: valor-base fixo
+end note
+
+note bottom of UC8
+  O holerite registra os aditivos,
+  os descontos e os valores
+  bruto e líquido do mês.
+end note
+
+@enduml
