@@ -20,7 +20,8 @@ Fonte do diagrama: [`diagrama-caso-de-uso.puml`](diagrama-caso-de-uso.puml) (Pla
 | UC2 | Gerenciar Aditivos | Cadastro dos acréscimos do mês. |
 | UC3 | Gerenciar Descontos | Cadastro dos descontos do mês. |
 | UC4 | Associar Aditivo/Desconto ao Funcionário | `<<include>>` de UC2 e UC3 — todo lançamento pertence a um profissional. |
-| UC5 | Gerar Folha de Pagamento | Processa o mês fechado, percorrendo todos os profissionais cadastrados. |
+| UC11 | Informar Competência (mês/ano) | `<<include>>` de UC2, UC3 e UC5 — define a qual mês um lançamento pertence e para qual mês a folha é gerada. |
+| UC5 | Gerar Folha de Pagamento | Processa uma competência específica, percorrendo todos os profissionais cadastrados. |
 | UC6 | Calcular Remuneração Bruta | `<<include>>` de UC5 — aplica a regra de cálculo de cada tipo de profissional. |
 | UC7 | Aplicar Aditivos e Descontos | `<<include>>` de UC8 — soma os acréscimos e subtrai os descontos do período. |
 | UC8 | Gerar Holerite do Funcionário | `<<include>>` de UC5 — um holerite por profissional, com bruto, líquido, aditivos e descontos. |
@@ -36,8 +37,8 @@ Fonte do diagrama: [`diagrama-caso-de-uso.puml`](diagrama-caso-de-uso.puml) (Pla
 ## Fluxo principal
 
 1. O responsável cadastra os profissionais (UC1 / UC1A–UC1C), validados em UC1V.
-2. Lança aditivos (UC2) e descontos (UC3), sempre associados a um profissional (UC4).
-3. Dispara a geração da folha (UC5): para cada profissional o sistema calcula o bruto (UC6), gera o holerite (UC8) aplicando aditivos e descontos (UC7) e apura o líquido.
+2. Lança aditivos (UC2) e descontos (UC3), sempre associados a um profissional (UC4) e a uma competência (UC11).
+3. Dispara a geração da folha (UC5) para uma competência específica (UC11): para cada profissional o sistema calcula o bruto (UC6), gera o holerite (UC8) aplicando os aditivos e descontos **daquela competência** (UC7) e apura o líquido.
 4. Consulta os holerites (UC9) e a folha consolidada (UC10).
 
 ## Como gerar a imagem

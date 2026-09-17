@@ -22,6 +22,7 @@ rectangle "Sistema de Folha de Pagamento" {
   usecase "Gerenciar Aditivos" as UC2
   usecase "Gerenciar Descontos" as UC3
   usecase "Associar Aditivo/Desconto\nao Funcionário" as UC4
+  usecase "Informar Competência\n(mês/ano)" as UC11
 
   ' ---------- Folha de pagamento ----------
   usecase "Gerar Folha de Pagamento" as UC5
@@ -52,10 +53,13 @@ UC1C --|> UC1
 UC1  ..> UC1V : <<include>>
 UC2  ..> UC4  : <<include>>
 UC3  ..> UC4  : <<include>>
+UC2  ..> UC11 : <<include>>
+UC3  ..> UC11 : <<include>>
 
 UC5  ..> UC6  : <<include>>
 UC5  ..> UC8  : <<include>>
 UC8  ..> UC7  : <<include>>
+UC5  ..> UC11 : <<include>>
 
 UC9  ..> UC5  : <<extend>>
 
@@ -70,6 +74,14 @@ note bottom of UC8
   O holerite registra os aditivos,
   os descontos e os valores
   bruto e líquido do mês.
+end note
+
+note bottom of UC11
+  A competência (mês/ano) define a que
+  período um aditivo/desconto pertence
+  e para qual período a folha é gerada.
+  Só entram no holerite os lançamentos
+  cuja competência é a mesma da folha.
 end note
 
 @enduml
