@@ -1,6 +1,10 @@
 package br.edu.imepac.entidades;
 
-public class Funcionario {
+/**
+ * Classe abstrata: nunca é instanciada diretamente, só através de
+ * Professor, Coordenador ou Bibliotecario (ver diagrama de classes).
+ */
+public abstract class Funcionario {
     private int id;
     private String nome;
     private String email;
@@ -42,4 +46,11 @@ public class Funcionario {
         }
         this.idade = idade;
     }
+
+    /**
+     * Cada tipo de funcionário calcula sua remuneração de um jeito
+     * diferente (polimorfismo) — ver Professor, Coordenador e
+     * Bibliotecario.
+     */
+    public abstract double calcularRemuneracao();
 }

@@ -1,17 +1,23 @@
 package br.edu.imepac.front;
 
+import br.edu.imepac.entidades.Bibliotecario;
+import br.edu.imepac.entidades.Coordenador;
 import br.edu.imepac.entidades.Funcionario;
+import br.edu.imepac.entidades.Professor;
 
 import java.util.Scanner;
 
 /**
  * Tela "Gerenciar Funcionários" (UC1 do diagrama de caso de uso).
  *
- * Os dados comuns (nome, email, idade) já são validados de verdade,
- * usando {@link Funcionario#setIdade(int)}. Os dados específicos de cada
- * tipo são coletados normalmente, mas o cadastro em si (persistência)
- * ainda depende da camada de serviço/DAO, então é sinalizado como
- * pendente no momento em que seria salvo.
+ * Os dados de cada funcionário já são validados de verdade (via os
+ * setters das entidades reais — nome/email/idade em
+ * {@link Funcionario}, e os campos específicos de cada subtipo). O que
+ * ainda não existe é a persistência: a camada de serviço já tem
+ * {@code FuncionarioService.cadastrar(Funcionario)} pronta, mas ela
+ * depende de um {@code FuncionarioDAO} concreto, que ainda não foi
+ * implementado — por isso o cadastro é sinalizado como pendente no
+ * momento em que seria salvo.
  */
 public class MenuFuncionario {
 
@@ -54,59 +60,65 @@ public class MenuFuncionario {
         System.out.println();
         System.out.println("--- Cadastrar Professor ---");
 
-        Funcionario funcionario = lerDadosComuns();
-        int quantidadeAulas = LeitorConsole.lerInteiro(scanner, "Quantidade de aulas");
-        double valorAula = LeitorConsole.lerDecimal(scanner, "Valor da aula (R$)");
+        Professor professor = new Professor();
+        lerDadosComuns(professor);
+        professor.setQuantidadeAulas(LeitorConsole.lerInteiro(scanner, "Quantidade de aulas"));
+        professor.setValorAula(LeitorConsole.lerDecimal(scanner, "Valor da aula (R$)"));
 
-        System.out.printf("%nDados válidos: %s, %d aula(s) x R$ %.2f%n",
-                funcionario.getNome(), quantidadeAulas, valorAula);
+        System.out.printf("%nDados válidos: %s, %d aula(s) x R$ %.2f (remuneração bruta: R$ %.2f)%n",
+                professor.getNome(), professor.getQuantidadeAulas(), professor.getValorAula(),
+                professor.calcularRemuneracao());
 
         throw new FuncionalidadeNaoImplementadaException(
-                "Cadastrar Professor (persistência via FuncionarioService/DAO)");
+                "Cadastrar Professor (persistência via FuncionarioService/FuncionarioDAO)");
     }
 
     private void cadastrarCoordenador() {
         System.out.println();
         System.out.println("--- Cadastrar Coordenador ---");
 
-        Funcionario funcionario = lerDadosComuns();
-        double valorBase = LeitorConsole.lerDecimal(scanner, "Valor-base (R$)");
-        double percentual = LeitorConsole.lerDecimal(scanner, "Percentual (ex.: 2 para 2%)");
-        int quantidadeAlunos = LeitorConsole.lerInteiro(scanner, "Quantidade de alunos");
+        Coordenador coordenador = new Coordenador();
+        lerDadosComuns(coordenador);
+        coordenador.setValorBase(LeitorConsole.lerDecimal(scanner, "Valor-base (R$)"));
+        coordenador.setPercentual(LeitorConsole.lerDecimal(scanner, "Percentual (ex.: 2 para 2%)"));
+        coordenador.setQuantidadeAlunos(LeitorConsole.lerInteiro(scanner, "Quantidade de alunos"));
 
-        System.out.printf("%nDados válidos: %s, base R$ %.2f + %.2f%% x %d aluno(s)%n",
-                funcionario.getNome(), valorBase, percentual, quantidadeAlunos);
+        System.out.printf("%nDados válidos: %s, base R$ %.2f + %.2f x %d aluno(s) (remuneração bruta: R$ %.2f)%n",
+                coordenador.getNome(), coordenador.getValorBase(), coordenador.getPercentual(),
+                coordenador.getQuantidadeAlunos(), coordenador.calcularRemuneracao());
 
         throw new FuncionalidadeNaoImplementadaException(
-                "Cadastrar Coordenador (persistência via FuncionarioService/DAO)");
+                "Cadastrar Coordenador (persistência via FuncionarioService/FuncionarioDAO)");
     }
 
     private void cadastrarBibliotecario() {
         System.out.println();
         System.out.println("--- Cadastrar Bibliotecário ---");
 
-        Funcionario funcionario = lerDadosComuns();
-        double valorBase = LeitorConsole.lerDecimal(scanner, "Valor-base (R$)");
+        Bibliotecario bibliotecario = new Bibliotecario();
+        lerDadosComuns(bibliotecario);
+        bibliotecario.setValorBase(LeitorConsole.lerDecimal(scanner, "Valor-base (R$)"));
 
-        System.out.printf("%nDados válidos: %s, valor-base R$ %.2f%n",
-                funcionario.getNome(), valorBase);
+        System.out.printf("%nDados válidos: %s, valor-base R$ %.2f (remuneração bruta: R$ %.2f)%n",
+                bibliotecario.getNome(), bibliotecario.getValorBase(), bibliotecario.calcularRemuneracao());
 
         throw new FuncionalidadeNaoImplementadaException(
-                "Cadastrar Bibliotecário (persistência via FuncionarioService/DAO)");
+                "Cadastrar Bibliotecário (persistência via FuncionarioService/FuncionarioDAO)");
     }
 
     private void listarFuncionarios() {
         throw new FuncionalidadeNaoImplementadaException(
-                "Listar Funcionários (consulta via FuncionarioService/DAO)");
+                "Listar Funcionários (consulta via FuncionarioService/FuncionarioDAO)");
     }
 
     /**
-     * Coleta e valida os dados comuns a qualquer tipo de funcionário.
-     * A idade só é aceita quando passa pela validação real de
+     * Coleta e valida os dados comuns a qualquer tipo de funcionário,
+     * preenchendo o objeto já construído pelo chamador (não dá mais pra
+     * instanciar Funcionario diretamente, agora que ele é abstrato). A
+     * idade só é aceita quando passa pela validação real de
      * {@link Funcionario#setIdade(int)} (idade negativa ou menor de 18).
      */
-    private Funcionario lerDadosComuns() {
-        Funcionario funcionario = new Funcionario();
+    private void lerDadosComuns(Funcionario funcionario) {
         funcionario.setNome(LeitorConsole.lerTexto(scanner, "Nome"));
         funcionario.setEmail(LeitorConsole.lerTexto(scanner, "Email"));
 
@@ -120,6 +132,5 @@ public class MenuFuncionario {
                 System.out.println("Erro: " + e.getMessage());
             }
         }
-        return funcionario;
     }
 }
