@@ -34,8 +34,11 @@ public class Funcionario {
     }
 
     public void setIdade(int idade) {
+        if(idade < 0){
+            throw new IllegalArgumentException("A idade não pode ser negativa");
+        }
         if(idade < 18){
-            throw new IllegalArgumentException("A idade deve ser maior que 18");
+            throw new IllegalArgumentException("O profissional deve ter no mínimo 18 anos");
         }
         this.idade = idade;
     }
