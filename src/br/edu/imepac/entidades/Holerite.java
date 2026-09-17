@@ -65,7 +65,13 @@ public class Holerite {
         return Collections.unmodifiableList(lancamentos);
     }
 
+    /**
+     * Adiciona um lançamento a este holerite, sincronizando os dois
+     * lados da agregação (o lançamento passa a saber a qual holerite
+     * foi aplicado).
+     */
     public void adicionarLancamento(Lancamento lancamento) {
         lancamentos.add(lancamento);
+        lancamento.setHolerite(this);
     }
 }

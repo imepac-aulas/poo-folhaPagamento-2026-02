@@ -64,7 +64,17 @@ public class FolhaPagamentoService {
         }
 
         FolhaPagamento folhaSalva = folhaPagamentoDAO.salvar(folha);
-        folha.getHolerites().forEach(holeriteDAO::salvar);
+
+        // Salva primeiro o holerite (pra ganhar id) e só então os
+        // lançamentos aplicados a ele — é o que grava, num banco real,
+        // a que holerite cada lançamento pertence (Lancamento.holerite).
+        for (Holerite holerite : folha.getHolerites()) {
+            holeriteDAO.salvar(holerite);
+            for (Lancamento lancamento : holerite.getLancamentos()) {
+                lancamentoDAO.salvar(lancamento);
+            }
+        }
+
         return folhaSalva;
     }
 
